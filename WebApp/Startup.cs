@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace WebApp
 {
@@ -19,9 +20,17 @@ namespace WebApp
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+                .AddCookie(options =>
+                {
+                    options.Events.OnRedirectToLogin = (context) =>
+                    {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    };
+                });
 
             services.AddSingleton<IAccountDatabase, AccountDatabaseStub>();
+            services.AddSingleton<IAccountService, AccountService>();
             services.AddSingleton<IAccountCache, AccountCache>();
         }
 
@@ -32,6 +41,9 @@ namespace WebApp
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseMvc();
             app.Run(async (context) => { await context.Response.WriteAsync("Hello World!"); });
