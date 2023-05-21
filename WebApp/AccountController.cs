@@ -26,7 +26,7 @@ namespace WebApp
         }
 
         //TODO 5: Endpoint should works only for users with "Admin" Role
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public Account GetByInternalId([FromRoute] int id)
         {
