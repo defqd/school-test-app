@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,9 @@ namespace WebApp
         [HttpGet]
         public ValueTask<Account> Get()
         {
-            return _accountService.LoadOrCreateAsync(null /* TODO 3: Get user id from cookie */);
+            var curUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return _accountService.LoadOrCreateAsync(curUserId /* TODO 3: Get user id from cookie */);
         }
 
         //TODO 5: Endpoint should works only for users with "Admin" Role
