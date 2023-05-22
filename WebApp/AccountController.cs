@@ -39,7 +39,10 @@ namespace WebApp
         {
             //Update account in cache, don't bother saving to DB, this is not an objective of this task.
             var account = await Get();
+
             account.Counter++;
+
+            _accountService.Update(account);
         }
     }
 }

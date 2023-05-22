@@ -15,5 +15,10 @@ namespace WebApp
         ValueTask<Account> LoadOrCreateAsync(string id);
         
         ValueTask<Account> LoadOrCreateAsync(long id);
+        
+        /// <summary>
+        /// Update account
+        /// </summary>
+        void Update(Account account);
     }
 }
