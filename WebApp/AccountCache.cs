@@ -23,13 +23,14 @@ namespace WebApp
             _itemsByGuid.AddOrUpdate(account.ExternalId, account, (key, item) => account);
         }
 
-        public bool TryRemove(long key, out Account account)
+        public bool TryRemove(long accountId, out Account account)
         {
-            var idFound = _itemsById.TryRemove(key, out var account1);
-            var guidFound = _itemsByGuid.TryRemove(account1?.ExternalId, out var account2);
-            account = account1 ?? account2;
-            // do not inline them, both calls should be made
-            return idFound || guidFound;
+            return _itemsById.TryRemove(accountId, out account);
+        }
+
+        public bool TryRemove(string externalId, out Account account)
+        {
+            return _itemsByGuid.TryRemove(externalId, out account);
         }
 
         public void Clear()
